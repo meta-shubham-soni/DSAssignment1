@@ -45,6 +45,7 @@ public class LinkedList {
 			// Go to next node 
 			currNode = currNode.next; 
 		} 
+		System.out.println();
 	}
 	
 	// Method to return length of LinkedList
@@ -58,77 +59,83 @@ public class LinkedList {
 		return length;
 	}
 	
-	// Method to rotate a part of LinkedList
+	/**
+	 * Function to rotate the subLinkedList
+	 * @param low
+	 * @param high
+	 * @param noOfRotations
+	 */
 	public void rotateSubList(int low,int high,int noOfRotations){
-		
+		if(low == high)
+			return;
 		int size = high - low + 1;  
 	    
-	    // If k is greater than size of sublist then   
-	    // we will take its modulo with size of sublist  
 	    if (noOfRotations > size) {  
 	    	noOfRotations = noOfRotations % size;  
 	    }  
 	    
-	    // If k is zero or k is equal to size or k is  
-	    // a multiple of size of sublist then list   
-	    // remains intact  
+ 
 	    if (noOfRotations == 0 || noOfRotations == size) {   
 	        return;  
 	    }  
 	    
-	    Node link = null;  // m-th node  
-	    if (low == 1) {  
-	        link = head;  
-	    }  
-	    
-	    // This loop will traverse all node till  
-	    // end node of sublist.      
-	    Node c = head;  // Current traversed node  
-	    int count = 0;  // Count of traversed nodes  
-	    Node end = null;    
-	    Node pre = null; // Previous of m-th node  
-	    while (c != null) {  
-	        count++;  
-	    
-	        // We will save (m-1)th node and later  
-	        // make it point to (n-k+1)th node  
-	        if (count == low - 1) {  
-	            pre = c;  
-	            link = c.next;  
-	        }  
-	        if (count == high - noOfRotations) {  
-	            if (low == 1) {  
-	                end = c;  
-	                head = c.next;  
-	            }  
-	            else {  
-	                end = c;  
-	    
-	                // That is how we bring (n-k+1)th  
-	                // node to front of sublist.  
-	                pre.next = c.next;  
-	            }  
-	        }  
-	    
-	        // This keeps rest part of list intact.  
-	        if (count == high) {  
-	            Node d = c.next;  
-	            c.next = link;  
-	            end.next = d;  
-	            Node head = this.head;  
-	            while (head != null) {  
-	                System.out.print( head.data+" ");  
-	                head = head.next;  
-	            }  
-	            return;  
-	        }  
-	        c = c.next;  
-		
+	    Node mprevious , nprevious , m , n;
+	    mprevious = head;
+	    nprevious = head;
+	    int count = 1;
+	    while(count < low-1){
+	    	count++;
+	    	mprevious = mprevious.next;
 	    }
-	
+	    count = 1;
+	    while(count < high-1){
+	    	count++;
+	    	nprevious = nprevious.next;
+	    }
+	    if(low == 1)
+	    	m = head;
+	    else
+	    	m = mprevious.next;
+	    n = nprevious.next;
+	    
+	    if(low == 1){
+	    	for(int i=0;i<noOfRotations;i++){
+
+		    	nprevious.next = n.next;
+		    	n.next = m;
+		    	Node tempN = m;
+		    	while(tempN.next != nprevious){
+		    		tempN = tempN.next;
+		    	}
+		    	m = n;
+		    	n = nprevious;
+		    	nprevious = tempN;
+		    	head = m;
+
+		    }
+	    }
+	    else {
+		    for(int i=0;i<noOfRotations;i++){
+		    	
+		    	mprevious.next = n;
+		    	nprevious.next = n.next;
+		    	n.next = m;
+		    	Node tempN = m;
+		    	while(tempN.next != nprevious){
+		    		tempN = tempN.next;
+		    	}
+		    	m = n;
+		    	n = nprevious;
+		    	nprevious = tempN;
+
+		    }
+	    }
 	}
 	
-	
+	/**
+	 * Function to detect Loop in LinkedList
+	 * @return
+	 */
     public boolean detectLoop(){
         Node slow_p = head, fast_p = head;
         int flag = 0;
@@ -146,4 +153,7 @@ public class LinkedList {
         else
             return false;
     }
+    
+    
+    
 }
